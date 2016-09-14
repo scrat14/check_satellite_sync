@@ -66,8 +66,6 @@ my $o_satellite_pwd  = undef;   # satellite user password
 my $o_organization   = undef;   # satellite organization 
 my $o_version        = undef;   # version
 my $o_timeout        = undef;   # timeout
-my $o_warn;                     # warning
-my $o_crit;                     # critical
 
 my %status  = ( ok => "OK", warning => "WARNING", critical => "CRITICAL", unknown => "UNKNOWN");
 my %ERRORS  = ( "OK" => 0, "WARNING" => 1, "CRITICAL" => 2, "UNKNOWN" => 3);
@@ -92,8 +90,6 @@ sub parse_options(){
     'o:s'   => \$o_organization,    'organization:s' => \$o_organization,
     'V'     => \$o_version,         'version'    => \$o_version,
     't:i'   => \$o_timeout,         'timeout:i'  => \$o_timeout,
-    'w:s'   => \$o_warn,            'warning:s'  => \$o_warn,
-    'c:s'   => \$o_crit,            'critical:s' => \$o_crit,
                                     'ca-file:s'  => \$o_ca_file
   );
 
@@ -138,7 +134,7 @@ sub parse_options(){
 #***************************************************#
 sub print_usage(){
   print "Usage: $0 [-v] -H <hostname> [-p <port>] -u <username> -P <password> [--ca-file <ca-file> \n";
-  print "       [-o <organization> ] [-t <timeout>] [-w <warn>] [-c <critical>] [-V] \n";
+  print "       [-o <organization> ] [-t <timeout>] [-V] \n";
 }
 
 
@@ -173,10 +169,6 @@ Options:
     Satellite organization to check (default: all organizations)
  -t, --timeout=INTEGER
     Seconds before connection times out (default: $satellite_timeout)
- -w, --warning=DOUBLE
-    Value to result in warning status
- -c, --critical=DOUBLE
-    Value to result in critical status
  -v, --verbose
     Show details for command-line debugging
     (Icinga/Nagios may truncate output)
