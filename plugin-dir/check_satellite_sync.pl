@@ -271,6 +271,7 @@ for (my $i=0;$i< scalar @{ $rref->{'results'} };$i++){
   	# The following sync stati will result in this Icinga/Nagios results:
   	# success              => OK
   	# warning              => WARNING
+  	# pending              => WARNING
   	# error                => CRITICAL
   	# other (if possible?) => UNKNOWN
   	#
@@ -278,7 +279,7 @@ for (my $i=0;$i< scalar @{ $rref->{'results'} };$i++){
   	# CRITICAL -> UNKNOWN -> WARNING -> OK
   	if ($rref->{'results'}->[$i]->{'last_sync'}->{'result'} eq "success"){
   	  $exit_status = "ok" unless $exit_status eq 'warning' or $exit_status eq 'critical' or $exit_status eq 'unknown';
-  	}elsif ($rref->{'results'}->[$i]->{'last_sync'}->{'result'} eq "warning"){
+  	}elsif ($rref->{'results'}->[$i]->{'last_sync'}->{'result'} eq "warning" || $rref->{'results'}->[$i]->{'last_sync'}->{'result'} eq "pending"){
   	  $exit_status = "warning" unless $exit_status eq 'critical' or $exit_status eq 'unknown';
   	  $sync_failed{ $rref->{'results'}->[$i]->{'name'} } = $rref->{'results'}->[$i]->{'last_sync'}->{'result'};
   	}elsif ($rref->{'results'}->[$i]->{'last_sync'}->{'result'} eq "error"){
