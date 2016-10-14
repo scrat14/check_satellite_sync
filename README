@@ -1,0 +1,84 @@
+#******************************************************************#
+#                                                                  #
+#     README for check_satellite_sync plugin for Icinga/Nagios     #
+#                                                                  #
+#******************************************************************#
+
+What is check_rhev3?
+====================
+
+This plugin for Icinga/Nagios is used to monitor if last content sync status
+of repositories was successful.
+
+
+Contributions / Help
+====================
+
+Send email to rkoch@rk-it.at if you have questions regarding use
+of this software. Please include the following information in your email:
+* OS type and version
+* Perl version
+
+To submit patches or suggest improvements, send email to rkoch@rk-it.at or create
+a pull request on Github. Thanks.
+
+
+Installation
+============
+
+The check_satellite_sync installation can be used by following the standard autotools
+installation process, documented in the INSTALL file. As a quick start you can do
+
+$ ./configure
+$ make all
+# make install
+
+This will install check_satellite_sync to /usr/local/nagios/libexec.
+
+To change these paths use the following options:
+--prefix=<path_to_nagios_plugins>
+
+To change the user and group ownership of these files use:
+--with-nagios-user=<user>
+--with-nagios-group=<group>
+
+The 'nagios-plugins-satellite_sync.spec' file demonstrates how to distribute 
+check_satellite_sync as an RPM package.
+
+Also make sure that the following requirements are met:
+Perl
+Perl-Modules:
+  LWP::UserAgent
+  perl-Crypt-SSLeay
+  HTTP::Request
+  Getopt::Long
+  JSON::PP
+
+For Fedora 19 (and newer) install the following packages:
+# yum install perl-libwww-perl perl-LWP-Protocol-https perl-HTTP-Message \
+              perl-XML-Simple
+
+For RHEL 6 install the following packages:
+# yum install perl-Crypt-SSLeay perl-libwww-perl perl-XML-Simple
+
+For Debian Squeeze install the following packages:
+# apt-get install libwww-perl libcrypt-ssleay-perl libxml-simple-perl
+
+
+Documentation
+=============
+
+Short documentation on how to use this plugin.
+
+Detailed documentation can be found on the project website
+https://github.com/ovido/check_satellite_sync.
+
+Check sync status with:
+check_satellite_sync -H satellite -u admin -P password
+
+Verify satellite certificate:
+check_satellite_sync -H satellite -u admin -P password --ca-file ca.crt
+
+Monitor only 1 organization:
+check_satellite_sync -H satellite -u admin -P password -o "Default Organization"
+

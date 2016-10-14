@@ -7,9 +7,9 @@
 #                                                       #
 #  Version: 0.1.0                                       #
 #  Created: 2016-09-14                                  #
-#  Last Update: 2016-09-14                              #
+#  Last Update: 2016-10-14                              #
 #  License: GPL - http://www.gnu.org/licenses           #
-#  Copyright: (c)2014-2016 Rene Koch                    #
+#  Copyright: (c)2016 Rene Koch                         #
 #  Author:  Rene Koch <rkoch@rk-it.at>                  #
 #  URL: https://github.com/scrat14/check_satellite_sync #
 #                                                       #
@@ -33,7 +33,6 @@ use strict;
 use LWP::UserAgent;
 use HTTP::Request;
 use HTTP::Request::Common qw(POST);
-#use HTTP::Headers;
 use Getopt::Long;
 use JSON::PP;
 
@@ -146,7 +145,7 @@ sub print_usage(){
 #***************************************************#
 sub print_help(){
   print "\nRed Hat Satellite 6 Content View Sync checks for Icinga/Nagios version $version\n";
-  print "GPL license, (c)2014-2016   - Rene Koch <rkoch\@rk-it.at>\n\n";
+  print "GPL license, (c)2016   - Rene Koch <rkoch\@rk-it.at>\n\n";
   print_usage();
   print <<EOT;
 
