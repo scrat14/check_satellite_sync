@@ -4,7 +4,7 @@
 #                                                                  #
 #******************************************************************#
 
-What is check_rhev3?
+What is check_satellite_sync?
 ====================
 
 This plugin for Icinga/Nagios is used to monitor if last content sync status
