@@ -5,9 +5,9 @@
 #                                                       #
 #  Name:    check_satellite_sync                        #
 #                                                       #
-#  Version: 0.1.0                                       #
+#  Version: 0.1.1                                       #
 #  Created: 2016-09-14                                  #
-#  Last Update: 2016-10-14                              #
+#  Last Update: 2020-09-18                              #
 #  License: GPL - http://www.gnu.org/licenses           #
 #  Copyright: (c)2016 Rene Koch                         #
 #  Author:  Rene Koch <rkoch@rk-it.at>                  #
@@ -43,6 +43,7 @@ use Data::Dumper;
 # all values can be overwritten via command line options
 my $satellite_port    = 443;          # default port
 my $satellite_timeout = 15;           # default timeout
+my $repo_exclude      = "";
 
 # create performance data
 # 0 ... disabled
@@ -52,7 +53,7 @@ my $perfdata   = 1;
 
 # Variables
 my $prog       = "check_satellite_sync";
-my $version    = "0.1.0";
+my $version    = "0.1.1";
 my $projecturl = "https://github.com/scrat14/check_satellite_sync";
 
 my $o_verbose        = undef;   # verbosity
@@ -65,6 +66,7 @@ my $o_satellite_pwd  = undef;   # satellite user password
 my $o_organization   = undef;   # satellite organization 
 my $o_version        = undef;   # version
 my $o_timeout        = undef;   # timeout
+my $o_repo_exclude   = undef;   # excluded repos
 
 my %status  = ( ok => "OK", warning => "WARNING", critical => "CRITICAL", unknown => "UNKNOWN");
 my %ERRORS  = ( "OK" => 0, "WARNING" => 1, "CRITICAL" => 2, "UNKNOWN" => 3);
@@ -89,6 +91,7 @@ sub parse_options(){
     'o:s'   => \$o_organization,    'organization:s' => \$o_organization,
     'V'     => \$o_version,         'version'    => \$o_version,
     't:i'   => \$o_timeout,         'timeout:i'  => \$o_timeout,
+    'x:s'   => \$o_repo_exclude,    'exclude:s'  => \$o_repo_exclude,
                                     'ca-file:s'  => \$o_ca_file
   );
 
@@ -109,7 +112,8 @@ sub parse_options(){
   $satellite_timeout = $o_timeout         if defined $o_timeout;
   $satellite_user    = $o_satellite_user  if defined $o_satellite_user;
   $satellite_pwd     = $o_satellite_pwd   if defined $o_satellite_pwd;
-  
+  $repo_exclude      = $o_repo_exclude    if defined $o_repo_exclude;
+
   if (! $satellite_user || ! $satellite_pwd){
     print "Missing Satellite API username or password!\n";
     exit $ERRORS{$status{'unknown'}};
@@ -133,7 +137,7 @@ sub parse_options(){
 #***************************************************#
 sub print_usage(){
   print "Usage: $0 [-v] -H <hostname> [-p <port>] -u <username> -P <password> [--ca-file <ca-file> \n";
-  print "       [-o <organization> ] [-t <timeout>] [-V] \n";
+  print "       [-o <organization> ] [-t <timeout>] [-x <repo name>] [-V] \n";
 }
 
 
@@ -168,6 +172,8 @@ Options:
     Satellite organization to check (default: all organizations)
  -t, --timeout=INTEGER
     Seconds before connection times out (default: $satellite_timeout)
+ -x, --exclude=REGULAR EXPRESSION
+    exclude Repository Names which match the regex
  -v, --verbose
     Show details for command-line debugging
     (Icinga/Nagios may truncate output)
@@ -266,6 +272,8 @@ for (my $i=0;$i< scalar @{ $rref->{'results'} };$i++){
   # get never synced repositories
   if (! defined $rref->{'results'}->[$i]->{'last_sync'}->{'result'}){
   	print "[V] Repository $rref->{'results'}->[$i]->{'name'} was never synced - skipping.\n" if $o_verbose >= 1;
+  }elsif (defined $o_repo_exclude && $rref->{'results'}->[$i]->{'name'} =~ m/$repo_exclude/ ){
+        print "[V] Repository $rref->{'results'}->[$i]->{'name'} excluded by User - skipping.\n" if $o_verbose >= 1;
   }else{
   	# The following sync stati will result in this Icinga/Nagios results:
   	# success              => OK
